@@ -4,9 +4,9 @@ var autoclickers = 0;
 var protests = 0;
 var multiplier = 1
 
-var costAutoClick = (autoclickers+1)*12;
-var costProtest = (protests+1)*15;
-var costMultiplier = (multiplier+1)*100;
+var costAutoClick = Math.round((1.07**(autoclickers))*10)
+var costProtest = Math.round((1.15**(protests))*60)
+var costMultiplier = Math.round((1.8**(multiplier-1))*1000)
 
 // Sounds
 var trudeau_punch = new Audio("assets/sounds/punch.mp3"); // buffers automatically when created
@@ -14,10 +14,10 @@ var trudeau_punch = new Audio("assets/sounds/punch.mp3"); // buffers automatical
 
 function update() // Updates onscreen text with real time variables
 {
-	var costAutoClick = (autoclickers+1)*12;
-	var costProtest = (protests+1)*15;
-	var costMultiplier = (multiplier+1)*100;
-	document.getElementById('text').value = prettyNum(punches);
+    costAutoClick = Math.round((1.07**(autoclickers))*10)
+    costProtest = Math.round((1.15**(protests))*60)
+	costMultiplier = Math.round((1.8**(multiplier-1))*1000)
+	document.getElementById('text').value = prettyNum(Math.round(punches));
 	document.title = prettyNum(punches) + " Punches - Punch The Trudeau"
 	document.getElementById("ownedAutoClick").innerHTML = "Owned: " + prettyNum(autoclickers);
 	document.getElementById("costAutoClick").innerHTML = "Cost: " + prettyNum(costAutoClick);
@@ -31,11 +31,11 @@ function update() // Updates onscreen text with real time variables
 	
 function timer() // Adding punches for upgrades
 {
-	punches = punches + autoclickers * multiplier;
-	punches = punches + protests*2 * multiplier;
+	punches += (autoclickers * multiplier) /20;
+	punches += (protests*2 * multiplier) / 20;
 	update()
 }
-setInterval(timer, 1000)
+setInterval(timer, 50)
 
 function add() // Called every time user clicks on trudeau
 {
@@ -125,7 +125,7 @@ function buyAutoClick()
 			
 function buyProtest()
 {
-	if(punches >= (protests+1)*15)
+	if(punches >= costProtest)
 	{
 		punches = punches - costProtest
 		protests = protests + 1;
