@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Punch The Trudeau</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<script src="game.js"></script>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Main -->
+					<section id="main">
+						<header>
+							<p id="pps">0 Punches/Per second</p>
+							<a href="#" onclick="add()"><img id="trudeau" width="50%" height="50%" onmousedown="trudeau3()" onmouseleave="trudeau()" onmouseover="trudeau2()" src="images/trudeau.png"></a>
+							<br><br>
+							You've punched trudeau:
+							<input type="text" id="text" disabled style="text-align:center">
+							times!
+							<hr>
+							<h2>Upgrades</h2>
+							<div id="upgradelist">
+								<table class="tg">
+								<thead>
+								  <tr>
+								    <td class="tg-0lax"><button onClick="buyAutoClick()"><a><img src="images/autoclick.png" width="32px" height="32px"></a></button></td>
+									<th class="tg-usm8">Autoclicker<br><span id="costAutoClick">Cost: 12</span> - <span id="ownedAutoClick">Owned: 0</span><br></th>
+								  </tr>
+								</thead>
+								<tbody>
+								  <tr>
+								    <td class="tg-0lax"><button onClick="buyProtest()"><a><img src="images/protest.png" width="32px" height="32px"></a></button></td>
+									<th class="tg-usm8">Ottawa Protest<br><span id="costProtest">Cost: 15</span> - <span id="ownedProtest">Owned: 0</span><br></th>
+								  </tr>
+								  <tr>
+								    <td class="tg-0lax"><button onClick="buyMultiplier()"><a><img src="images/multiplier.png" width="32px" height="32px"></a></button></td>
+									<th class="tg-usm8">Multiplier upgrade<br><span id="costMultiplier">Cost: 200</span> - <span id="ownedMultiplier">Current: x1</span><br></th>
+								  </tr>
+								</tbody>
+								</table>
+							</div>
+							<br><br>
+						</header>
+
+						<footer>
+							<button><a href="#" onclick="save()">Save</a></button>
+							<button><a href="#" onclick="load()">Load</a></button>
+						</footer>
+					</section>
+
+
+				<
+					<footer id="footer">
+						<ul class="copyright">
+							<li><a href="https://www.github.com/haydenki">Source Code</a></li><li><a href="#">Donate</a></li>
+						</ul>
+					</footer>
+
+			</div>
+
+		<!-- Scripts -->
+			<script>
+				if ('addEventListener' in window) {
+					window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-preload\b/, ''); });
+					document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+				}
+			</script>
+
+	</body>
+</html>
