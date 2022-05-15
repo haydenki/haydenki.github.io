@@ -7,6 +7,8 @@ var rednecks = 0;
 var truckers = 0;
 var gunstores = 0;
 var firstnations = 0;
+var banks = 0;
+var oils = 0;
 var currentScreen = "main";
 
 var costAutoClick = Math.round((1.07**(autoclickers))*10);
@@ -15,7 +17,10 @@ var costRedneck = Math.round((1.14**(rednecks))*1100);
 var costTrucker = Math.round((1.13**(truckers))*43000);
 var costGunstore = Math.round((1.12**(gunstores))*258000);
 var costFirstnation = Math.round((1.10**(firstnations))*14929920);
+var costBank = Math.round((1.08**(banks-1))*179159040);
+var costOil = Math.round((1.07**(oils-1))*2149908480);
 var costMultiplier = Math.round((5.8**(multiplier-1))*1000);
+
 
 // Sounds
 var trudeau_punch = new Audio("assets/sounds/punch.mp3"); // buffers automatically when created
@@ -24,7 +29,7 @@ var trudeau_punch = new Audio("assets/sounds/punch.mp3"); // buffers automatical
 function update() // Updates onscreen text with real time variables
 {
 	document.title = prettyNum(Math.round(punches)) + " Punches - Punch The Trudeau"
-	document.getElementById("pps").innerHTML =  prettyNum((((autoclickers)+(taxpayers*3)+(rednecks*10)+(truckers*360)+(gunstores*2160)+(firstnations*6480)))*multiplier) + " Punches/Per second";
+	document.getElementById("pps").innerHTML =  prettyNum((((autoclickers)+(taxpayers*15)+(rednecks*47)+(truckers*1750)+(gunstores*10639)+(firstnations*40003)+(banks*404800)+(oils*18048160)))*multiplier) + " Punches/Per second";
 	
 	// Update upgrade prices
     costAutoClick = Math.round((1.07**(autoclickers))*10)
@@ -33,6 +38,8 @@ function update() // Updates onscreen text with real time variables
 	costTrucker = Math.round((1.13**(truckers))*43000);
 	costGunstore = Math.round((1.12**(gunstores))*258000);
 	costFirstnation = Math.round((1.10**(firstnations))*14929920);
+	costBank = Math.round((1.08**(banks-1))*179159040);
+	costOil = Math.round((1.07**(oils-1))*2149908480);
 	costMultiplier = Math.round((5.8**(multiplier))*1000)
 	
 	if(currentScreen == "upgrades") // Only update these if on the upgrade screen
@@ -52,6 +59,10 @@ function update() // Updates onscreen text with real time variables
 	document.getElementById("costGunstore").innerHTML = "Cost: " + prettyNum(costGunstore);
 	document.getElementById("ownedFirstnation").innerHTML = "Owned: " + prettyNum(firstnations);
 	document.getElementById("costFirstnation").innerHTML = "Cost: " + prettyNum(costFirstnation);
+	document.getElementById("ownedBank").innerHTML = "Owned: " + prettyNum(banks);
+	document.getElementById("costBank").innerHTML = "Cost: " + prettyNum(costBank);
+	document.getElementById("ownedOil").innerHTML = "Owned: " + prettyNum(oils);
+	document.getElementById("costOil").innerHTML = "Cost: " + prettyNum(costOil);
 	}
 	if(currentScreen == "main") // Only update these if on the main screen
 	{
@@ -62,11 +73,13 @@ function update() // Updates onscreen text with real time variables
 function timer() // Adding punches for upgrades
 {
 	punches += (autoclickers * multiplier) / 20;
-	punches += (taxpayers*3 * multiplier) / 20;
-	punches += (rednecks*10 * multiplier) / 20;
-	punches += (truckers*360 * multiplier) / 20;
-	punches += (gunstores*2160 * multiplier) / 20;
-	punches += (firstnations*6480 * multiplier) / 20;
+	punches += (taxpayers*15 * multiplier) / 20;
+	punches += (rednecks*47 * multiplier) / 20;
+	punches += (truckers*1750 * multiplier) / 20;
+	punches += (gunstores*10639 * multiplier) / 20;
+	punches += (firstnations*40003 * multiplier) / 20;
+	punches += (banks*404800 * multiplier) / 20;
+	punches += (oils*18048160 * multiplier) / 20;
 	update()
 }
 setInterval(timer, 50)
@@ -91,6 +104,8 @@ function save() // Save the game
 	localStorage.setItem("truckers",truckers)
 	localStorage.setItem("gunstores",gunstores)
 	localStorage.setItem("firstnations",firstnations)
+	localStorage.setItem("banks",banks)
+	localStorage.setItem("oils",oils)
 }
 
 function load() // Load saved game
@@ -111,6 +126,10 @@ function load() // Load saved game
 	gunstores = parseInt(gunstores)
 	firstnations = localStorage.getItem("firstnations")
 	firstnations = parseInt(firstnations)
+	banks = localStorage.getItem("banks")
+	banks = parseInt(banks)
+	oils = localStorage.getItem("oils")
+	oils = parseInt(oils)
 	update()
 }
 
@@ -122,11 +141,6 @@ function trudeau2() // Change trudeau picture on mouse hover
 function trudeau() // Revert trudeau image on mouse leave
 {
 	document.getElementById("trudeau").src ="images/trudeau.png"
-}
-
-function trudeau3() // Change trudeaus face when punched
-{
-
 }
 
 function prettyNum(n) // Converts a number to a pretty format
@@ -243,7 +257,31 @@ function buyFirstnation()
 	if(punches >= costFirstnation)
 	{
 		punches -= costFirstnation;
-		firsnations = firstnations + 1;
+		firstnations = firstnations + 1;
+		update()
+		var snd = new Audio("assets/sounds/upgrade.mp3"); // buffers automatically when created
+		snd.play();
+	}
+}
+
+function buyBank()
+{
+	if(punches >= costBank)
+	{
+		punches -= costBank;
+		banks = banks + 1;
+		update()
+		var snd = new Audio("assets/sounds/upgrade.mp3"); // buffers automatically when created
+		snd.play();
+	}
+}
+
+function buyOil()
+{
+	if(punches >= costOil)
+	{
+		punches -= costOil;
+		oils = oils + 1;
 		update()
 		var snd = new Audio("assets/sounds/upgrade.mp3"); // buffers automatically when created
 		snd.play();
@@ -305,6 +343,14 @@ var scr_upgrades = `
 								  <tr>
 								    <td class="tg-0lax"><button onClick="buyFirstnation()"><a><img src="images/firstnation.png" width="32px" height="32px"></a></button></td>
 									<th class="tg-usm8">Thirsty First Nation<br><span id="costFirstnation">Cost: 14,929,920</span> - <span id="ownedFirstnation">Owned: 0</span><br></th>
+								  </tr>
+								  <tr>
+								    <td class="tg-0lax"><button onClick="buyBank()"><a><img src="images/bank.png" width="32px" height="32px"></a></button></td>
+									<th class="tg-usm8">Bank<br><span id="costBank">Cost: 179,159,040</span> - <span id="ownedBank">Owned: 0</span><br></th>
+								  </tr>
+								  <tr>
+								    <td class="tg-0lax"><button onClick="buyOil()"><a><img src="images/oil.png" width="32px" height="32px"></a></button></td>
+									<th class="tg-usm8">Oil Company<br><span id="costOil">Cost: 2,149,908,480</span> - <span id="ownedOil">Owned: 0</span><br></th>
 								  </tr>
 								  <tr>
 								    <td class="tg-0lax"><button onClick="buyMultiplier()"><a><img src="images/multiplier.png" width="32px" height="32px"></a></button></td>
