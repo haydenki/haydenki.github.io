@@ -1,15 +1,14 @@
-// Initialization variables
-var punches = 0;
-var autoclickers = 0;
-var taxpayers = 0;
-var multiplier = 1;
-var rednecks = 0;
-var truckers = 0;
-var gunstores = 0;
-var firstnations = 0;
-var banks = 0;
-var oils = 0;
-var currentScreen = "main";
+function ISODateString(d) { // Turns "2022-05-18T22:34:22.948Z" to 2022-05-18
+    function pad(n) {return n<10 ? '0'+n : n}
+    return d.getUTCFullYear()+'-'
+         + pad(d.getUTCMonth()+1)+'-'
+         + pad(d.getUTCDate())
+}
+
+// Popup object initialization
+let myNotification = notifast({ 
+	position: 'bottom-right' 
+})
 
 var costAutoClick = Math.round((1.07**(autoclickers))*10);
 var costTaxpayer = Math.round((1.15**(taxpayers))*60);
@@ -21,6 +20,31 @@ var costBank = Math.round((1.08**(banks-1))*179159040);
 var costOil = Math.round((1.07**(oils-1))*2149908480);
 var costMultiplier = Math.round((5.8**(multiplier-1))*1000);
 
+// Autoload is save is present
+if(parseInt(localStorage.getItem("punches"))) 
+{
+	load()
+}
+else {
+	// Initialization variables
+	var punches = 0;
+	var autoclickers = 0;
+	var taxpayers = 0;
+	var multiplier = 1;
+	var rednecks = 0;
+	var truckers = 0;
+	var gunstores = 0;
+	var firstnations = 0;
+	var banks = 0;
+	var oils = 0;
+	var totalPunches = 0;
+	var manualPunches = 0;
+	var currentScreen = "main";
+	var runStarted = new Date();
+	runStarted = ISODateString(runStarted)
+
+}
+
 
 // Sounds
 var trudeau_punch = new Audio("assets/sounds/punch.mp3"); // buffers automatically when created
@@ -29,7 +53,6 @@ var trudeau_punch = new Audio("assets/sounds/punch.mp3"); // buffers automatical
 function update() // Updates onscreen text with real time variables
 {
 	document.title = prettyNum(Math.round(punches)) + " Punches - Punch The Trudeau"
-	document.getElementById("pps").innerHTML =  prettyNum((((autoclickers)+(taxpayers*15)+(rednecks*47)+(truckers*1750)+(gunstores*10639)+(firstnations*40003)+(banks*404800)+(oils*18048160)))*multiplier) + " Punches/Per second";
 	
 	// Update upgrade prices
     costAutoClick = Math.round((1.07**(autoclickers))*10)
@@ -63,10 +86,22 @@ function update() // Updates onscreen text with real time variables
 	document.getElementById("costBank").innerHTML = "Cost: " + prettyNum(costBank);
 	document.getElementById("ownedOil").innerHTML = "Owned: " + prettyNum(oils);
 	document.getElementById("costOil").innerHTML = "Cost: " + prettyNum(costOil);
+	document.getElementById("pps").innerHTML =  prettyNum((((autoclickers)+(taxpayers*15)+(rednecks*47)+(truckers*1750)+(gunstores*10639)+(firstnations*40003)+(banks*404800)+(oils*18048160)))*multiplier) + " Punches/Per second";
 	}
 	if(currentScreen == "main") // Only update these if on the main screen
 	{
 		document.getElementById('text').value = prettyNum(Math.round(punches));
+		document.getElementById("pps").innerHTML =  prettyNum((((autoclickers)+(taxpayers*15)+(rednecks*47)+(truckers*1750)+(gunstores*10639)+(firstnations*40003)+(banks*404800)+(oils*18048160)))*multiplier) + " Punches/Per second";
+
+	}
+	if(currentScreen == "stats") // Only update these if on the stats screen
+	{
+		document.getElementById("currentPunches").innerHTML = prettyNum(Math.round(punches))
+		document.getElementById("totalPunches").innerHTML = prettyNum(Math.round(totalPunches))
+		document.getElementById("totalUpgrades").innerHTML = (autoclickers + taxpayers + rednecks + truckers + gunstores + firstnations + banks + oils)
+		document.getElementById("manualPunches").innerHTML = prettyNum(manualPunches)
+		document.getElementById("pps").innerHTML =  prettyNum((((autoclickers)+(taxpayers*15)+(rednecks*47)+(truckers*1750)+(gunstores*10639)+(firstnations*40003)+(banks*404800)+(oils*18048160)))*multiplier);
+		document.getElementById("runStarted").innerHTML = runStarted;
 	}
 }
 	
@@ -80,6 +115,16 @@ function timer() // Adding punches for upgrades
 	punches += (firstnations*40003 * multiplier) / 20;
 	punches += (banks*404800 * multiplier) / 20;
 	punches += (oils*18048160 * multiplier) / 20;
+	
+	// This is just for statistics
+	totalPunches += (autoclickers * multiplier) / 20;
+	totalPunches += (taxpayers*15 * multiplier) / 20;
+	totalPunches += (rednecks*47 * multiplier) / 20;
+	totalPunches += (truckers*1750 * multiplier) / 20;
+	totalPunches += (gunstores*10639 * multiplier) / 20;
+	totalPunches += (firstnations*40003 * multiplier) / 20;
+	totalPunches += (banks*404800 * multiplier) / 20;
+	totalPunches += (oils*18048160 * multiplier) / 20;
 	update()
 }
 setInterval(timer, 50)
@@ -88,6 +133,8 @@ function add() // Called every time user clicks on trudeau
 {
 	clearInterval(t)
 	punches++;
+	totalPunches++ // This is just for statistics
+	manualPunches++ // Also for statistics
 	update();
 	document.getElementById("trudeau").src ="images/trudeau3.png"
 	trudeau_punch.play();
@@ -106,6 +153,19 @@ function save() // Save the game
 	localStorage.setItem("firstnations",firstnations)
 	localStorage.setItem("banks",banks)
 	localStorage.setItem("oils",oils)
+	localStorage.setItem("totalPunches",totalPunches)
+	localStorage.setItem("manualPunches",manualPunches)
+	localStorage.setItem("runStarted",runStarted)
+	
+	// Display "game saved!" popup
+	myNotification.emitNotification({
+	title: '',
+	description: 'Game saved!',
+	icon: '<svg class="w-6 h-6" width="32px" height="32px" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+	backgroundColor: '#FFF',
+	fontColor: '#CE3131',
+	canBeClosed: true,
+	})
 }
 
 function load() // Load saved game
@@ -130,7 +190,25 @@ function load() // Load saved game
 	banks = parseInt(banks)
 	oils = localStorage.getItem("oils")
 	oils = parseInt(oils)
+	totalPunches = localStorage.getItem("totalPunches")
+	totalPunches = parseInt(totalPunches)
+	manualPunches = localStorage.getItem("manualPunches")
+	manualPunches = parseInt(manualPunches)
+	runStarted = localStorage.getItem("runStarted")
 	update()
+	
+	myNotification.deleteAllNotifications()
+	
+	// Show "game loaded!" popup
+	myNotification.emitNotification({
+	title: '',
+	description: 'Game successfully loaded!',
+	icon: '<svg class="w-6 h-6" height="32px" width="32px" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>',
+	backgroundColor: '#FFF',
+	fontColor: '#CE3131',
+	canBeClosed: true,
+	})
+	
 }
 
 function trudeau2() // Change trudeau picture on mouse hover
@@ -288,6 +366,9 @@ function buyOil()
 	}
 }
 
+var autosaveTimer = setInterval(save,120000) // Auto save
+var notifclearTimer = setInterval(myNotification.deleteAllNotifications,25000) // Auto delete notifications
+
 // ====== SCREENS ====== //
 var scr_main = `			<header>
 							<p id="pps">0 Punches/Per second</p>
@@ -304,11 +385,6 @@ var scr_main = `			<header>
 							</p>
 							<br>
 						</header>
-
-						<footer>
-							<button><a href="#" onclick="save()">Save</a></button>
-							<button><a href="#" onclick="load()">Load</a></button>
-						</footer>
 						`
 var scr_upgrades = `
 					<header>
@@ -366,5 +442,42 @@ var scr_upgrades = `
 
 var scr_trainers = `<p>Coming soon!</p>
 					<a onclick="switchScreen(scr_main)">>Back<</a>`
-var scr_stats = `<p>Coming soon!</p>
+					
+
+var scr_stats = `<h1 style="text-align:left;">Statistics</h1>
+				<hr>
+				<h2 style="text-align:left;">General</h2>
+				<table class="tf">
+				<th>
+				  <tr>
+					<th class="tf-73oq">Current punches : </th>
+					<th class="tf-73oq"><span id="currentPunches">0</span></th>
+				  </tr>
+				  <tr>
+					<td class="tf-73oq">All-time punches : </td>
+					<td class="tf-73oq"><span id="totalPunches">0</span></td>
+				  </tr>
+				  <tr>
+					<td class="tf-73oq">Run started : </td>
+					<td class="tf-73oq"><span id="runStarted">0</span></td>
+				  </tr>
+				  <tr>
+					<td class="tf-0lax">Upgrades owned : </td>
+					<td class="tf-0lax"><span id="totalUpgrades">0</span></td>
+				  </tr>
+				  <tr>
+					<td class="tf-0lax">Manual punches : </td>
+					<td class="tf-0lax"><span id="manualPunches">0</span></td>
+				  </tr>
+				  <tr>
+					<td class="tf-0lax">Punches/per second : </td>
+					<td class="tf-0lax"><span id="pps">0</span></td>
+				  </tr>
+				  </th>
+				  </table>
+				  <button onclick="save()"><a>Save game</a></button>
+				  <button onclick="load()"><a>Load game</a></button>
+				<hr>
+				<h2 style="text-align:left;">Achievements</h2>
+				<p>Coming soon!</p>
 				<a onclick="switchScreen(scr_main)">>Back<</a>`
