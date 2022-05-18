@@ -1,12 +1,6 @@
 @import url(fontawesome-all.min.css);
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300");
 
-/*
-	Identity by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
-
 /* Icon (alt) */
 
 	html, body, div, span, applet, object,
@@ -1079,3 +1073,17 @@
 #upgradelist {
 	text-align: center;
 }
+
+hr {
+	margin-bottom: 0px;
+}
+
+.tf  {border:none;border-collapse:collapse;border-spacing:0;font-size:12px;}
+.tf td{border-style:solid;border-width:0px;font-family:Arial, sans-serif;font-size:12x;overflow:hidden;
+  padding:0px 0px;word-break:normal;}
+.tf th{border-style:solid;border-width:0px;font-family:Arial, sans-serif;font-size:12px;font-weight:normal;
+  overflow:hidden;padding:0px 0px;word-break:normal;}
+.tf .tf-j0xp{border-color:#000000;font-family:inherit;font-size:12px;text-align:left;vertical-align:top}
+.tf .tf-pjk6{border-color:#000000;text-align:left;vertical-align:top}
+.tf .tf-73oq{border-color:#000000;text-align:left;vertical-align:top}
+.tf .tf-0lax{text-align:left;vertical-align:top}
